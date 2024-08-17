@@ -25,3 +25,13 @@ MonoBehaviour:
     <Material>k__BackingField: {fileID: 2100000, guid: a57c5b373ef879847b8f73f8a92cd7c7,
       type: 2}
     <Health>k__BackingField: 1500
+  <MaxFoundationEnergy>k__BackingField: 100
+  <FoundationEnergyLossPerUnit>k__BackingField: 7
+  <FoundationEnergyGainPerRound>k__BackingField: 8
+  <FoundationEnergyGainPerHit>k__BackingField: 8
+  <FoundationEnergyGainVelocityMultiplier>k__BackingField: 7
+  <MaxHeightEnergy>k__BackingField: 75
+  <HeightEnergyLossPerUnit>k__BackingField: 8
+  <HeightEnergyGainPerRound>k__BackingField: 6
+  <HeightEnergyGainPerHit>k__BackingField: 3
+  <HeightEnergyGainVelocityMultiplier>k__BackingField: 2
