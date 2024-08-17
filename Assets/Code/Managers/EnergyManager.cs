@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Managers
 {
-    public class EnergyManager : Singleton<EnergyManager>
+    public class EnergyManager : Singleton<EnergyManager>, IRestart
     {
         public event Action<int> OnFoundationEnergyChanged;
         public event Action<int> OnHeightEnergyChanged;
@@ -61,6 +61,12 @@ namespace Code.Managers
                 FoundationEnergy += GameConfig.FoundationEnergyGainPerHit;
                 HeightEnergy += GameConfig.HeightEnergyGainPerHit;
             }
+        }
+        
+        public void Restart()
+        {
+            FoundationEnergy = GameConfig.MaxFoundationEnergy;
+            HeightEnergy = GameConfig.MaxHeightEnergy;
         }
     }
 }

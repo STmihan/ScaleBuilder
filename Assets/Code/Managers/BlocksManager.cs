@@ -14,6 +14,12 @@ namespace Code.Managers
         {
             _blocks.Add(block);
         }
+        
+        public void RemoveBlock(Block block)
+        {
+            Destroy(block.gameObject);
+            _blocks.Remove(block);
+        }
 
         public float GetBlocksHeight()
         {
