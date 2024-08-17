@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections;
+using Code.Configs;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Code
+namespace Code.Managers
 {
 
     public class MeshManager : Singleton<MeshManager>
@@ -39,61 +38,79 @@ namespace Code
                 switch (_currentStep)
                 {
                     case GenerationStep.FirstPoint:
-                        _startPoint = hitPoint;
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            _foundation = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            _foundation.transform.position = _startPoint;
-                            _foundation.transform.localScale =
-                                new Vector3(0.1f, 0.1f, 0.1f);
-                            _currentStep = GenerationStep.Foundation;
-                            _height = 0.1f;
-                        }
-
+                        ProcessFirstPoint(hitPoint);
                         break;
 
                     case GenerationStep.Foundation:
-                        _endPoint = hitPoint;
-
-                        Vector3 baseSize = new Vector3(Mathf.Abs(_endPoint.x - _startPoint.x), 0.1f,
-                            Mathf.Abs(_endPoint.z - _startPoint.z));
-                        _foundation.transform.localScale = baseSize;
-
-                        _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
-                            (_endPoint.z - _startPoint.z) / 2);
-
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            _currentStep = GenerationStep.Height;
-                        }
-
+                        ProcessFoundation(hitPoint);
                         break;
 
                     case GenerationStep.Height:
-                        _height += Input.mousePositionDelta.y * 0.03f;
-                        
-                        if (_height < 0.1f)
-                        {
-                            _height = 0.1f;
-                        }
-                        _foundation.transform.localScale = new Vector3(_foundation.transform.localScale.x, _height,
-                            _foundation.transform.localScale.z);
-                        _foundation.transform.position = new Vector3(_foundation.transform.position.x,
-                            _planeHeight + _height / 2, _foundation.transform.position.z);
-                        
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            _currentStep = GenerationStep.FirstPoint;
-                            Block block = _foundation.AddComponent<Block>();
-                            block.Setup(_currentBlockType, _height);
-                            BlocksManager.Instance.AddBlock(block);
-                            _planeHeight = BlocksManager.Instance.GetBlocksHeight();
-                            _cameraBeam.SetTargetHeight(_planeHeight);
-                        }
-
+                        ProcessHeight();
                         break;
                 }
             }
+        }
+        
+        private void ProcessFirstPoint(Vector3 hitPoint)
+        {
+            _startPoint = hitPoint;
+            if (Input.GetMouseButtonDown(0))
+            {
+                _foundation = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                _foundation.transform.position = _startPoint;
+                _foundation.transform.localScale =
+                    new Vector3(0.1f, 0.1f, 0.1f);
+                _currentStep = GenerationStep.Foundation;
+                _height = 0.1f;
+            }
+        }
+        
+        private void ProcessFoundation(Vector3 hitPoint)
+        {
+            _endPoint = hitPoint;
+
+            Vector3 baseSize = new Vector3(Mathf.Abs(_endPoint.x - _startPoint.x), 0.1f,
+                Mathf.Abs(_endPoint.z - _startPoint.z));
+            _foundation.transform.localScale = baseSize;
+
+            _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
+                (_endPoint.z - _startPoint.z) / 2);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                _currentStep = GenerationStep.Height;
+            }
+        }
+        
+        private void ProcessHeight()
+        {
+            _height += Input.mousePositionDelta.y * 0.03f;
+                        
+            if (_height < 0.1f)
+            {
+                _height = 0.1f;
+            }
+            _foundation.transform.localScale = new Vector3(_foundation.transform.localScale.x, _height,
+                _foundation.transform.localScale.z);
+            _foundation.transform.position = new Vector3(_foundation.transform.position.x,
+                _planeHeight + _height / 2, _foundation.transform.position.z);
+                        
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartCoroutine(Submit());
+            }
+        }
+
+        private IEnumerator Submit()
+        {
+            _currentStep = GenerationStep.FirstPoint;
+            Block block = _foundation.AddComponent<Block>();
+            block.Setup(_currentBlockType, _height);
+            BlocksManager.Instance.AddBlock(block);
+            yield return new WaitForSeconds(1.5f);
+            _planeHeight = BlocksManager.Instance.GetBlocksHeight();
+            _cameraBeam.SetTargetHeight(_planeHeight);
         }
     }
 }
