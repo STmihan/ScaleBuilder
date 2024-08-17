@@ -12,6 +12,7 @@ namespace Code.Managers
             LevelManager.Instance,
             MeshManager.Instance,
             InGameUI.Instance,
+            EnergyManager.Instance,
         };
         
         public static void Restart()
