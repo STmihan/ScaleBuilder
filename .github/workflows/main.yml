@@ -37,9 +37,9 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
 
   deployWebGL:
-    if: ${{ matrix.targetPlatform == 'WebGL' }}
     runs-on: ubuntu-latest
     needs: buildForAllSupportedPlatforms
+    if: needs.buildForAllSupportedPlatforms.outputs['StandaloneWindows64'] == 'success' || needs.buildForAllSupportedPlatforms.outputs['WebGL'] == 'success'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
