@@ -1,6 +1,6 @@
 name: Build project
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -35,7 +35,7 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-  
+
   deployWebGL:
     if: ${{ matrix.targetPlatform == 'WebGL' }}
     runs-on: ubuntu-latest
