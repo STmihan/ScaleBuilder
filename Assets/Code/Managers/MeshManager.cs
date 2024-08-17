@@ -1,26 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Code
 {
-    [Serializable]
-    public class BlockMaterialPair
-    {
-        [field: SerializeField] public BlockType BlockType { get; set; }
-        [field: SerializeField] public Material Material { get; set; }
-    }
 
-    public enum GenerationStep
+    public class MeshManager : Singleton<MeshManager>
     {
-        FirstPoint,
-        Foundation,
-        Height,
-    }
-
-    public class MeshController : MonoBehaviour
-    {
-        [FormerlySerializedAs("_cameraBeamPoint")] [SerializeField] private CameraBeam _cameraBeam;
+        [SerializeField] private CameraBeam _cameraBeam;
+        
+        private BlockType _currentBlockType;
+        
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private GenerationStep _currentStep = GenerationStep.FirstPoint;
@@ -92,9 +83,12 @@ namespace Code
                         
                         if (Input.GetMouseButtonDown(0))
                         {
-                            _planeHeight += _height;
-                            _cameraBeam.SetTargetHeight(_planeHeight);
                             _currentStep = GenerationStep.FirstPoint;
+                            Block block = _foundation.AddComponent<Block>();
+                            block.Setup(_currentBlockType, _height);
+                            BlocksManager.Instance.AddBlock(block);
+                            _planeHeight = BlocksManager.Instance.GetBlocksHeight();
+                            _cameraBeam.SetTargetHeight(_planeHeight);
                         }
 
                         break;
