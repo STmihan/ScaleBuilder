@@ -19,6 +19,7 @@ namespace Code.Managers
         [SerializeField] private float _startHeight = 0.1f;
         [SerializeField] private float _maxHeightPerBlock = 4f;
         [SerializeField] private float _startSubmitTime = 1f;
+        [SerializeField] private float _submitTimeGlobal = 10f;
         [SerializeField] private HeightPlane _heightPlane;
         [SerializeField] private Material _foundationMaterial;
         [SerializeField] private Material _heightMaterial;
@@ -159,10 +160,17 @@ namespace Code.Managers
             {
                 if (BlocksManager.IsAnyBlockMoving()) _submitTime = _startSubmitTime;
                 _submitTime -= Time.deltaTime;
+                _submitTimeGlobal -= Time.deltaTime;
+                if (_submitTimeGlobal < 0)
+                {
+                    BlocksManager.RemoveBlock(block);
+                    break;
+                }
                 yield return null;
             }
 
             _submitTime = _startSubmitTime;
+            _submitTimeGlobal = 10f;
             _currentBlockType = RandomBlockType();
             _planeHeight = BlocksManager.GetBlocksHeight();
             CameraManager.SetTargetHeight(_planeHeight);

@@ -1336,9 +1336,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 070555c933b14eec8679d14d9dc6c935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startHeight: 0.1
+  _startHeight: 0.2
   _maxHeightPerBlock: 4
   _startSubmitTime: 1.5
+  _submitTimeGlobal: 10
   _heightPlane: {fileID: 1613575825}
   _foundationMaterial: {fileID: 2100000, guid: eab8b3166923d0244bef29de75796848, type: 2}
   _heightMaterial: {fileID: 2100000, guid: 08cf41501d209b54e86c883cb9eb2fba, type: 2}
