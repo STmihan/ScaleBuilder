@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Managers
 {
-    public class BlocksManager : Singleton<BlocksManager>
+    public class BlocksManager : Singleton<BlocksManager>, IRestart
     {
         private readonly List<Block> _blocks = new List<Block>();
 

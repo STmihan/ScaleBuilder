@@ -31,7 +31,7 @@ namespace Code.UI
 
         private void OnRestartButtonClicked()
         {
-            LevelManager.Restart();
+            RestartManager.Restart();
             Hide();
         }
 

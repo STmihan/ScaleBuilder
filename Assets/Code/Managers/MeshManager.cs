@@ -2,38 +2,44 @@
 using System.Collections;
 using Code.Configs;
 using Code.Gameplay;
+using Code.UI;
 using Code.Utils;
 using UnityEngine;
 
 namespace Code.Managers
 {
-    public class MeshManager : Singleton<MeshManager>
+    public class MeshManager : Singleton<MeshManager>, IRestart
     {
-        [SerializeField] private float _startHeight = 0.1f;
-        [SerializeField] private float _maxHeightPerBlock = 4f;
-        [SerializeField] private float _startSubmitTime = 1f;
-        
         private CameraManager CameraManager => CameraManager.Instance;
         private BlocksManager BlocksManager => BlocksManager.Instance;
         private LevelManager LevelManager => LevelManager.Instance;
+        private EnergyManager EnergyManager => EnergyManager.Instance;
+        private InGameUI InGameUI => InGameUI.Instance;
         
+        [SerializeField] private float _startHeight = 0.1f;
+        [SerializeField] private float _maxHeightPerBlock = 4f;
+        [SerializeField] private float _startSubmitTime = 1f;
         [SerializeField] private HeightPlane _heightPlane;
-        
+        [SerializeField] private Material _foundationMaterial;
+        [SerializeField] private Material _heightMaterial;
+
         private BlockType _currentBlockType;
-        
+
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private GenerationStep _currentStep = GenerationStep.FirstPoint;
-        private GameObject _foundation;
         private float _height;
         private float _planeHeight;
-        
+
         private Camera _mainCamera;
-        
+
         private bool _isPlacingBlock;
-        
+
         private Coroutine _submitCoroutine;
         private float _submitTime;
+        
+        private GameObject _foundation;
+        private MeshRenderer _meshRenderer;
 
         private void Start()
         {
@@ -77,13 +83,16 @@ namespace Code.Managers
                 }
             }
         }
-        
+
         private void ProcessFirstPoint(Vector3 hitPoint)
         {
             _startPoint = hitPoint;
             if (Input.GetMouseButtonDown(0))
             {
                 _foundation = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                _meshRenderer = _foundation.GetComponent<MeshRenderer>();
+                _meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                _meshRenderer.material = _foundationMaterial;
                 _foundation.transform.position = _startPoint;
                 _foundation.transform.localScale =
                     new Vector3(_startHeight, _startHeight, _startHeight);
@@ -91,7 +100,7 @@ namespace Code.Managers
                 _height = _startHeight;
             }
         }
-        
+
         private void ProcessFoundation(Vector3 hitPoint)
         {
             _endPoint = hitPoint;
@@ -103,24 +112,37 @@ namespace Code.Managers
             _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
                 (_endPoint.z - _startPoint.z) / 2);
 
+            int energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
+            InGameUI.SetFoundationEnergyToSpend(energyToSpend);
+            
+            if (EnergyManager.FoundationEnergy < energyToSpend) return;
+
             if (Input.GetMouseButtonDown(0))
             {
                 _currentStep = GenerationStep.Height;
+                EnergyManager.FoundationEnergy -= energyToSpend;
+                _meshRenderer.material = _heightMaterial;
             }
         }
-        
+
         private void ProcessHeight()
         {
             _height += Input.mousePositionDelta.y * 0.03f;
-                        
+
             _height = Mathf.Clamp(_height, _startHeight, _maxHeightPerBlock);
             _foundation.transform.localScale = new Vector3(_foundation.transform.localScale.x, _height,
                 _foundation.transform.localScale.z);
             _foundation.transform.position = new Vector3(_foundation.transform.position.x,
                 _planeHeight + _height / 2, _foundation.transform.position.z);
-                        
+            
+            int energyToSpend = EnergyManager.CalculateHeightEnergyLoss(_height);
+            InGameUI.SetHeightEnergyToSpend(energyToSpend);
+            
+            if (EnergyManager.HeightEnergy < energyToSpend) return;
+
             if (Input.GetMouseButtonDown(0))
             {
+                EnergyManager.HeightEnergy -= energyToSpend;
                 _submitCoroutine = StartCoroutine(Submit());
             }
         }
@@ -139,6 +161,7 @@ namespace Code.Managers
                 _submitTime -= Time.deltaTime;
                 yield return null;
             }
+
             _submitTime = _startSubmitTime;
             _currentBlockType = RandomBlockType();
             _planeHeight = BlocksManager.GetBlocksHeight();
@@ -158,11 +181,11 @@ namespace Code.Managers
             _heightPlane.Enable(_planeHeight);
             CameraManager.SetTargetHeight(_planeHeight);
         }
-        
+
         private BlockType RandomBlockType()
         {
             var values = Enum.GetValues(typeof(BlockType));
-            return (BlockType) values.GetValue(UnityEngine.Random.Range(0, values.Length));
+            return (BlockType)values.GetValue(UnityEngine.Random.Range(0, values.Length));
         }
     }
 }

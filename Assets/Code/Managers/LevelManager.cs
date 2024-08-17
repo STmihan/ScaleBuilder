@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Code.Managers
 {
-    public class LevelManager : Singleton<LevelManager>
+    public class LevelManager : Singleton<LevelManager>, IRestart
     {
         private BlocksManager BlocksManager => BlocksManager.Instance;
         private MeshManager MeshManager => MeshManager.Instance;
@@ -30,8 +30,6 @@ namespace Code.Managers
 
         public void Restart()
         {
-            BlocksManager.Restart();
-            MeshManager.Restart();
             IsGameOver = false;
         }
     }

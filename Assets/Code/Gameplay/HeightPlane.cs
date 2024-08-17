@@ -5,13 +5,8 @@ namespace Code.Gameplay
 {
     public class HeightPlane : MonoBehaviour
     {
-        private MeshRenderer _meshRenderer;
-
-        private void Start()
-        {
-            _meshRenderer = GetComponent<MeshRenderer>();
-        }
-
+        [SerializeField] private MeshRenderer _meshRenderer;
+        
         public void Enable(float height)
         {
             SetHeight(height);

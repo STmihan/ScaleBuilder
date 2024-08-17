@@ -1,6 +1,7 @@
 using System;
 using Code.Configs;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Code.Gameplay
 {
@@ -28,6 +29,7 @@ namespace Code.Gameplay
             Health = GameConfig.BlockStats[blockType].Health;
             _meshRenderer = GetComponent<MeshRenderer>();
             _meshRenderer.material = GameConfig.BlockStats[blockType].Material;
+            _meshRenderer.shadowCastingMode = ShadowCastingMode.On;
 
             _rigidbody = gameObject.AddComponent<Rigidbody>();
         }
