@@ -1,4 +1,5 @@
-﻿using Code.Configs;
+﻿using System;
+using Code.Configs;
 using Code.Gameplay;
 using Code.Managers;
 using Code.Utils;
@@ -13,6 +14,7 @@ namespace Code.UI
         private EnergyManager EnergyManager => EnergyManager.Instance;
         private BlocksManager BlocksManager => BlocksManager.Instance;
         private GameConfig GameConfig => GameConfig.Instance;
+        private LevelManager LevelManager => LevelManager.Instance;
         
         [SerializeField] private Image _foundationEnergyBar;
         [SerializeField] private Image _foundationEnergyBarToSpend;
@@ -22,8 +24,11 @@ namespace Code.UI
         [SerializeField] private Image _currentBlockImage;
         [SerializeField] private Image _nextBlockImage;
 
+        private CanvasGroup _canvasGroup;
+        
         private void Start()
         {
+            _canvasGroup = GetComponent<CanvasGroup>();
             EnergyManager.OnFoundationEnergyChanged += OnFoundationEnergyChanged;
             EnergyManager.OnHeightEnergyChanged += OnHeightEnergyChanged;
             BlocksManager.OnBlockTypeChanged += OnBlockTypeChanged;
@@ -35,7 +40,12 @@ namespace Code.UI
             _currentBlockImage.color = GameConfig.BlockStats[BlocksManager.CurrentBlockType].Material.color;
             _nextBlockImage.color = GameConfig.BlockStats[BlocksManager.NextBlockType].Material.color;
         }
-        
+
+        private void Update()
+        {
+            _canvasGroup.alpha = LevelManager.IsGameOver ? 0 : 1;
+        }
+
         private void OnHeightEnergyChanged(int energy)
         {
             float fillAmount = (float) energy / EnergyManager.GameConfig.MaxHeightEnergy;

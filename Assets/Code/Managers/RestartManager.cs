@@ -11,8 +11,8 @@ namespace Code.Managers
             BlocksManager.Instance,
             LevelManager.Instance,
             MeshManager.Instance,
-            InGameUI.Instance,
             EnergyManager.Instance,
+            InGameUI.Instance,
         };
         
         public static void Restart()
