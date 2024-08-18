@@ -17,12 +17,12 @@ namespace Code.Managers
         {
             if (!block2)
             {
-                block1.Hit(velocity * GameConfig.TerrainDamageMultiplier);
+                block1.Hit(velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass());
                 return;
             }
             
-            block1.Hit(velocity * GameConfig.BlockStats[block2.BlockType].DamageMultiplier);
-            block2.Hit(velocity * GameConfig.BlockStats[block1.BlockType].DamageMultiplier);
+            block1.Hit(velocity * GameConfig.BlockStats[block2.BlockType].DamageMultiplier * block2.GetMass());
+            block2.Hit(velocity * GameConfig.BlockStats[block1.BlockType].DamageMultiplier * block1.GetMass());
         }
     }
 }

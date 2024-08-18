@@ -11,6 +11,6 @@ namespace Code.Configs
         [field: SerializeField] public Material Material { get; set; }
         [field: SerializeField] public float Health { get; set; }
         [field: SerializeField] public float DamageMultiplier { get; set; }
-        [field: SerializeField] public float Mass { get; set; }
+        [field: SerializeField] public float MassPerUnit { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Code.UI
     {
         private SettingsUI SettingsUI => SettingsUI.Instance;
         private HelpUI HelpUI => HelpUI.Instance;
+        private LevelManager LevelManager => LevelManager.Instance;
 
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _settingsButton;
@@ -30,7 +31,7 @@ namespace Code.UI
                 {
                     OnStartButtonClicked();
                 }
-                else if (!PauseManager.IsPaused && !IsVisible && !LevelManager.Instance.IsGameOver)
+                else if (!PauseManager.IsPaused && !IsVisible && !LevelManager.IsGameOver)
                 {
                     PauseManager.Pause();
                     Show(this);

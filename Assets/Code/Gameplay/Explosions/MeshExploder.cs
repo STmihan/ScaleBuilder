@@ -7,11 +7,11 @@ namespace Code.Gameplay.Explosions
     {
         private ExplosionManager ExplosionManager => ExplosionManager.Instance;
 
-        public void Explode()
+        public void Explode(BlockType type)
         {
             var explosionPos = transform.position;
             var scale = transform.localScale;
-            ExplosionManager.Explode(explosionPos, scale);
+            ExplosionManager.Explode(explosionPos, scale, type);
         }
     }
 }

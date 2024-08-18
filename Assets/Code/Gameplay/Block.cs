@@ -38,7 +38,7 @@ namespace Code.Gameplay
             _meshRenderer.shadowCastingMode = ShadowCastingMode.On;
 
             _rigidbody = gameObject.AddComponent<Rigidbody>();
-            _rigidbody.mass = GameConfig.BlockStats[blockType].Mass;
+            _rigidbody.mass = GameConfig.BlockStats[blockType].MassPerUnit * _rigidbody.transform.localScale.magnitude;
             MeshExploder = gameObject.AddComponent<MeshExploder>();
         }
 
@@ -47,7 +47,7 @@ namespace Code.Gameplay
             Health -= damage;
             if (Health <= 0)
             {
-                MeshExploder.Explode();
+                MeshExploder.Explode(BlockType);
                 BlocksManager.RemoveBlock(this);
             }
         }
@@ -62,6 +62,11 @@ namespace Code.Gameplay
             {
                 OnHitBlock?.Invoke(Height, this, block);
             }
+        }
+        
+        public float GetMass()
+        {
+            return _rigidbody.mass;
         }
     }
 }
