@@ -23,9 +23,7 @@ namespace Code.Managers
         [SerializeField] private HeightPlane _heightPlane;
         [SerializeField] private Material _foundationMaterial;
         [SerializeField] private Material _heightMaterial;
-
-        private BlockType _currentBlockType;
-
+        
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private GenerationStep _currentStep = GenerationStep.FirstPoint;
@@ -49,7 +47,6 @@ namespace Code.Managers
             CameraManager.SetTargetHeight(_planeHeight);
             _heightPlane.Enable(_planeHeight);
             LevelManager.OnGameOver += OnGameOver;
-            _currentBlockType = RandomBlockType();
             _submitTime = _startSubmitTime;
         }
 
@@ -152,7 +149,7 @@ namespace Code.Managers
         {
             _currentStep = GenerationStep.FirstPoint;
             Block block = _foundation.AddComponent<Block>();
-            block.Setup(_currentBlockType, _height);
+            block.Setup(BlocksManager.CurrentBlockType, _height);
             BlocksManager.AddBlock(block);
             _heightPlane.Disable();
             _isPlacingBlock = true;
@@ -171,7 +168,7 @@ namespace Code.Managers
 
             _submitTime = _startSubmitTime;
             _submitTimeGlobal = 10f;
-            _currentBlockType = RandomBlockType();
+            BlocksManager.GenerateNextBlockType();
             _planeHeight = BlocksManager.GetBlocksHeight();
             CameraManager.SetTargetHeight(_planeHeight);
             _heightPlane.Enable(_planeHeight);
@@ -188,12 +185,6 @@ namespace Code.Managers
             _heightPlane.SetHeight(_startHeight);
             _heightPlane.Enable(_planeHeight);
             CameraManager.SetTargetHeight(_planeHeight);
-        }
-
-        private BlockType RandomBlockType()
-        {
-            var values = Enum.GetValues(typeof(BlockType));
-            return (BlockType)values.GetValue(UnityEngine.Random.Range(0, values.Length));
         }
     }
 }

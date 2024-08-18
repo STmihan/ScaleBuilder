@@ -12,7 +12,10 @@ namespace Code.Configs
 
         public static GameConfig Instance => _instance ??= Setup();
 
+        [Header("Block Stats")]
         [SerializeField] private List<BlockStats> _blockMaterialPairs = new();
+        [field: SerializeField] public float TerrainDamageMultiplier { get; set; } = 0.5f;
+        [field: Header("Energy")]
         [field: SerializeField] public int MaxFoundationEnergy { get; private set; } = 100;
         [field: SerializeField] public int FoundationEnergyLossPerUnit { get; private set; } = 4;
         [field: SerializeField] public int FoundationEnergyGainPerRound { get; private set; } = 5;
