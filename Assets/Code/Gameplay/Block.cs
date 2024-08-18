@@ -32,7 +32,7 @@ namespace Code.Gameplay
             Height = height;
             
 
-            Health = GameConfig.BlockStats[blockType].Health;
+            Health = CalculateHealth(blockType);
             _meshRenderer = GetComponent<MeshRenderer>();
             _meshRenderer.material = GameConfig.BlockStats[blockType].Material;
             _meshRenderer.shadowCastingMode = ShadowCastingMode.On;
@@ -67,6 +67,11 @@ namespace Code.Gameplay
         public float GetMass()
         {
             return _rigidbody.mass;
+        }
+
+        private float CalculateHealth(BlockType type)
+        {
+            return GameConfig.BlockStats[type].Health * transform.localScale.magnitude;
         }
     }
 }

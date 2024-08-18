@@ -28,6 +28,7 @@ namespace Code.Configs
         [field: SerializeField] public int HeightEnergyGainVelocityMultiplier { get; private set; } = 1;
         
         [field: SerializeField] public float TrashHold { get; private set; } = 0.01f;
+        [field: SerializeField] public float HealthTrashHold { get; private set; } = 0.01f;
 
 
         public IReadOnlyDictionary<BlockType, BlockStats> BlockStats { get; private set; }
