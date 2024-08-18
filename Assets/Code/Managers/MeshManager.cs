@@ -132,7 +132,6 @@ namespace Code.Managers
                 }
 
                 _currentStep = GenerationStep.Height;
-                EnergyManager.FoundationEnergy -= energyToSpend;
                 _meshRenderer.material = _heightMaterial;
             }
         }
@@ -160,6 +159,8 @@ namespace Code.Managers
                 }
 
                 EnergyManager.HeightEnergy -= energyToSpend;
+                energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
+                EnergyManager.FoundationEnergy -= energyToSpend;
                 _submitCoroutine = StartCoroutine(Submit());
             }
         }

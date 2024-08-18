@@ -57,8 +57,8 @@ namespace Code.Managers
         private void Awake()
         {
             SoundClips = SetupSoundClips();
-            MusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
-            SoundVolume = PlayerPrefs.GetFloat("SoundVolume", 0.5f);
+            MusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.3f);
+            SoundVolume = PlayerPrefs.GetFloat("SoundVolume", 0.3f);
             StartMusic();
         }
         
