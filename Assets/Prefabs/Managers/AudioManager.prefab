@@ -307,4 +307,5 @@ MonoBehaviour:
   _musicSource: {fileID: 8494466538169730368}
   _soundSource: {fileID: 5010887778484672333}
   _soundClips: []
-  _musicClips: []
+  _musicClips:
+  - {fileID: 8300000, guid: 8b86b7fc8c893e24d9e2d6b82e341a21, type: 3}
