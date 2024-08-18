@@ -54,7 +54,7 @@ namespace Code.Gameplay
         
         private void OnCollisionEnter(Collision other)
         { 
-            if (other.gameObject.GetComponent<Terrain>())
+            if (other.gameObject.layer == LayerMask.NameToLayer("Terrain")) 
             {
                 OnHitBlock?.Invoke(Height, this, null);
             }
