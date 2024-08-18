@@ -29,13 +29,8 @@ namespace Code.Managers
             transform.position = pos;
             if (Input.GetMouseButton(2))
             {
-                Cursor.lockState = CursorLockMode.Locked;
                 float dx = Input.mousePositionDelta.x;
                 transform.Rotate(Vector3.up, dx * Time.deltaTime * _rotateSense);
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
             }
         }
 
