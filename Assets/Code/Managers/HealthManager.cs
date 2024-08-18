@@ -1,6 +1,8 @@
-﻿using Code.Configs;
+﻿using System;
+using Code.Configs;
 using Code.Gameplay;
 using Code.Utils;
+using UnityEngine;
 
 namespace Code.Managers
 {
@@ -15,14 +17,20 @@ namespace Code.Managers
 
         private void OnHitBlock(float velocity, Block block1, Block block2)
         {
+            float damage = 0;
             if (!block2)
             {
+                damage = velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass();
                 block1.Hit(velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass());
+                Debug.Log("Terrain hit. Damage: "+ damage);
                 return;
             }
-            
-            block1.Hit(velocity * GameConfig.BlockStats[block2.BlockType].DamageMultiplier * block2.GetMass());
-            block2.Hit(velocity * GameConfig.BlockStats[block1.BlockType].DamageMultiplier * block1.GetMass());
+            damage = velocity * GameConfig.BlockStats[block2.BlockType].DamageMultiplier * block2.GetMass();
+            block1.Hit(damage);
+            Debug.Log("Block 1 hit. Damage: " + damage);
+            damage = velocity * GameConfig.BlockStats[block1.BlockType].DamageMultiplier * block1.GetMass();
+            Debug.Log("Block 2 hit. Damage: " + damage);
+            block2.Hit(damage);
         }
     }
 }

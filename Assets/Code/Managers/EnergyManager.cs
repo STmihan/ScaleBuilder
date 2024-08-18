@@ -10,7 +10,7 @@ namespace Code.Managers
     {
         public event Action<int> OnFoundationEnergyChanged;
         public event Action<int> OnHeightEnergyChanged;
-        
+
         private int _foundationEnergy;
         private int _heightEnergy;
 
@@ -21,7 +21,7 @@ namespace Code.Managers
             get => _foundationEnergy;
             set
             {
-                _foundationEnergy = value; 
+                _foundationEnergy = value;
                 OnFoundationEnergyChanged?.Invoke(_foundationEnergy);
             }
         }
@@ -31,7 +31,7 @@ namespace Code.Managers
             get => _heightEnergy;
             set
             {
-                _heightEnergy = value; 
+                _heightEnergy = value;
                 OnHeightEnergyChanged?.Invoke(_heightEnergy);
             }
         }
@@ -54,15 +54,20 @@ namespace Code.Managers
             return Mathf.RoundToInt(height * GameConfig.HeightEnergyLossPerUnit);
         }
 
-        private void OnHitBlock(float arg1, Block arg2, Block arg3)
+        private void OnHitBlock(float velocity, Block arg2, Block arg3)
         {
             if (arg3 != null)
             {
-                FoundationEnergy += GameConfig.FoundationEnergyGainPerHit;
-                HeightEnergy += GameConfig.HeightEnergyGainPerHit;
+                if (velocity > GameConfig.TrashHold)
+                {
+                    FoundationEnergy += GameConfig.FoundationEnergyGainPerHit;
+                    FoundationEnergy = Mathf.Min(FoundationEnergy, GameConfig.MaxFoundationEnergy);
+                    HeightEnergy += GameConfig.HeightEnergyGainPerHit;
+                    HeightEnergy = Mathf.Min(HeightEnergy, GameConfig.MaxHeightEnergy);
+                }
             }
         }
-        
+
         public void Restart()
         {
             FoundationEnergy = GameConfig.MaxFoundationEnergy;
