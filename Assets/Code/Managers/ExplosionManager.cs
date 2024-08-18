@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Code.Configs;
+using Code.Gameplay;
 using Code.Utils;
 using DG.Tweening;
 using UnityEngine;
@@ -9,6 +11,7 @@ namespace Code.Managers
     {
         public Rigidbody Rigidbody { get; set; }
         public MeshFilter MeshFilter { get; set; }
+        public MeshRenderer MeshRenderer { get; set; }
         public bool IsAvailable { get; set; }
     }
 
@@ -22,6 +25,7 @@ namespace Code.Managers
 
     public class ExplosionManager : Singleton<ExplosionManager>
     {
+        private GameConfig GameConfig => GameConfig.Instance;
         private const int ShatterPartsPoolSize = 200;
 
         [SerializeField] private List<GameObject> _shatterPrefabs;
@@ -34,7 +38,7 @@ namespace Code.Managers
 
         private Vector3 _shatterScaleCache;
 
-        public void Explode(Vector3 position, Vector3 scale)
+        public void Explode(Vector3 position, Vector3 scale, BlockType type)
         {
             var explosionPos = position;
             var shatterCount = Mathf.RoundToInt(scale.magnitude * _shatterCountPerUnit);
@@ -47,6 +51,7 @@ namespace Code.Managers
                 {
                     shatterParts[j] = shatterPart;
                     shatterPart.IsAvailable = false;
+                    shatterPart.MeshRenderer.material = GameConfig.BlockStats[type].Material;
                     j++;
                 }
             }
@@ -72,6 +77,7 @@ namespace Code.Managers
                 {
                     Rigidbody = instance.GetComponent<Rigidbody>(),
                     MeshFilter = instance.GetComponent<MeshFilter>(),
+                    MeshRenderer = instance.GetComponent<MeshRenderer>(),
                     IsAvailable = true
                 };
                 _shatterScaleCache = shatterPart.MeshFilter.transform.localScale;

@@ -10,7 +10,7 @@ namespace Code.Managers
     {
         [SerializeField] private float _rotateSense = 15;
         private float _targetHeight;
-        
+
         private Camera _camera;
 
         private void Start()
@@ -20,9 +20,13 @@ namespace Code.Managers
 
         private void Update()
         {
-            transform.position = Vector3.Slerp(transform.position,
+            Vector3 pos = Vector3.Slerp(
+                transform.position,
                 new Vector3(transform.position.x, _targetHeight, transform.position.z),
-                Time.deltaTime * 5);
+                Time.deltaTime * 5
+            );
+            
+            transform.position = pos;
             if (Input.GetMouseButton(2))
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -39,7 +43,7 @@ namespace Code.Managers
         {
             _targetHeight = height;
         }
-        
+
         public void CameraShake(float duration, float magnitude)
         {
             _camera.DOShakePosition(duration, magnitude);

@@ -113,6 +113,8 @@ namespace Code.Managers
 
             Vector3 baseSize = new Vector3(Mathf.Abs(_endPoint.x - _startPoint.x), _startHeight,
                 Mathf.Abs(_endPoint.z - _startPoint.z));
+            baseSize.x = Mathf.Max(baseSize.x, _startHeight);
+            baseSize.z = Mathf.Max(baseSize.z, _startHeight);
             _foundation.transform.localScale = baseSize;
 
             _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
@@ -190,6 +192,7 @@ namespace Code.Managers
             CameraManager.SetTargetHeight(_planeHeight);
             _heightPlane.Enable(_planeHeight);
             _isPlacingBlock = false;
+            _foundation = null;
         }
 
         public void Restart()
