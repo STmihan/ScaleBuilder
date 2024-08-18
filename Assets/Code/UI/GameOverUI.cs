@@ -13,6 +13,7 @@ namespace Code.UI
         [SerializeField] private Button _menuButton;
         [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _scoreText;
+        [SerializeField] private TMP_Text _highScoreText;
 
         
         private void Start()
@@ -32,13 +33,14 @@ namespace Code.UI
         private void OnMenuButtonClicked()
         {
             Hide(false, false);
-            StartUI.Show();
+            StartUI.Show(this);
         }
 
         private void OnGameOver()
         {
             _scoreText.text = LevelManager.Score.ToString();
-            Show();
+            _highScoreText.text = LevelManager.HighScore.ToString();
+            Show(this);
         }
     }
 }

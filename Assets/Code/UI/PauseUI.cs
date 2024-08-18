@@ -1,20 +1,18 @@
-﻿using Code.Managers;
-using TMPro;
+﻿using System;
+using Code.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.UI
 {
-    public class StartUI : UIMenu<StartUI>
+    public class PauseUI : UIMenu<PauseUI>
     {
         private SettingsUI SettingsUI => SettingsUI.Instance;
         private HelpUI HelpUI => HelpUI.Instance;
-        private LevelManager LevelManager => LevelManager.Instance;
 
         [SerializeField] private Button _startButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _helpButton;
-        [SerializeField] private TMP_Text _highScoreText;
 
         private void Start()
         {
@@ -22,14 +20,22 @@ namespace Code.UI
             _settingsButton.onClick.AddListener(OnSettingsButtonClicked);
             _helpButton.onClick.AddListener(OnHelpButtonClicked);
             Hide(true);
-            Show(this);
-            _highScoreText.text = LevelManager.HighScore.ToString();
-            LevelManager.OnGameOver += OnGameOver;
         }
 
-        private void OnGameOver()
+        private void Update()
         {
-            _highScoreText.text = LevelManager.HighScore.ToString();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (PauseManager.IsPaused && IsVisible)
+                {
+                    OnStartButtonClicked();
+                }
+                else if (!PauseManager.IsPaused && !IsVisible && !LevelManager.Instance.IsGameOver)
+                {
+                    PauseManager.Pause();
+                    Show(this);
+                }
+            }
         }
 
         private void OnHelpButtonClicked()
@@ -47,7 +53,7 @@ namespace Code.UI
         private void OnStartButtonClicked()
         {
             Hide();
-            RestartManager.Restart();
+            PauseManager.Resume();
         }
     }
 }

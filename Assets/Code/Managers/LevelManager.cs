@@ -11,6 +11,12 @@ namespace Code.Managers
         public bool IsGameOver { get; private set; } = true;
         public event Action OnGameOver;
         public int Score => Mathf.RoundToInt(BlocksManager.GetBlocksHeight());
+        public int HighScore { get; private set; }
+
+        private void Awake()
+        {
+            HighScore = PlayerPrefs.GetInt("HighScore", 0);
+        }
 
         private void Update()
         {
@@ -24,6 +30,8 @@ namespace Code.Managers
         {
             if (IsGameOver) return;
             IsGameOver = true;
+            HighScore = Mathf.Max(HighScore, Score);
+            PlayerPrefs.SetInt("HighScore", HighScore);
             OnGameOver?.Invoke();
         }
 

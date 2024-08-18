@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Code.UI
@@ -6,6 +7,7 @@ namespace Code.UI
     public class HelpUI : UIMenu<HelpUI>
     {
         private StartUI StartUI => StartUI.Instance;
+        private PauseUI PauseUI => PauseUI.Instance;
         
         [SerializeField] private Button _backButton;
         
@@ -15,10 +17,28 @@ namespace Code.UI
             Hide(true);
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (IsVisible)
+                {
+                    OnBackButtonClicked();
+                }
+            }
+        }
+
         private void OnBackButtonClicked()
         {
             Hide(false, false);
-            StartUI.Show();
+            if (PreviousMenu is StartUI)
+            {
+                StartUI.Show(this);
+            }
+            else if (PreviousMenu is PauseUI)
+            {
+                PauseUI.Show(this);
+            }
         }
     }
 }
