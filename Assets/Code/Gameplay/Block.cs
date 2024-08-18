@@ -4,6 +4,7 @@ using Code.Gameplay.Explosions;
 using Code.Managers;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Code.Gameplay
 {
@@ -23,6 +24,7 @@ namespace Code.Gameplay
         public Vector3 Velocity => _rigidbody.velocity;
         
         private Rigidbody _rigidbody;
+
         
         public void Setup(BlockType blockType, float height)
         {
@@ -52,15 +54,12 @@ namespace Code.Gameplay
         
         private void OnCollisionEnter(Collision other)
         { 
-            Debug.Log(other.relativeVelocity);
             if (other.gameObject.GetComponent<Terrain>())
             {
-                Debug.Log("Block hit terrain");
                 OnHitBlock?.Invoke(Height, this, null);
             }
             if (other.gameObject.TryGetComponent<Block>(out var block))
             {
-                Debug.Log("Block hit block " + block.BlockType);
                 OnHitBlock?.Invoke(Height, this, block);
             }
         }

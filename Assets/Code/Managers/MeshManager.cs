@@ -80,6 +80,14 @@ namespace Code.Managers
                         break;
                 }
             }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                _currentStep = GenerationStep.FirstPoint;
+                if (_foundation) Destroy(_foundation);
+                InGameUI.SetFoundationEnergyToSpend(0);
+                InGameUI.SetHeightEnergyToSpend(0);
+            }
         }
 
         private void ProcessFirstPoint(Vector3 hitPoint)
@@ -113,10 +121,14 @@ namespace Code.Managers
             int energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
             InGameUI.SetFoundationEnergyToSpend(energyToSpend);
             
-            if (EnergyManager.FoundationEnergy < energyToSpend) return;
-
             if (Input.GetMouseButtonDown(0))
             {
+                if (EnergyManager.FoundationEnergy < energyToSpend)
+                {
+                    CameraManager.CameraShake(0.1f, 0.1f);
+                    return;
+                }
+
                 _currentStep = GenerationStep.Height;
                 EnergyManager.FoundationEnergy -= energyToSpend;
                 _meshRenderer.material = _heightMaterial;
@@ -136,10 +148,15 @@ namespace Code.Managers
             int energyToSpend = EnergyManager.CalculateHeightEnergyLoss(_height);
             InGameUI.SetHeightEnergyToSpend(energyToSpend);
             
-            if (EnergyManager.HeightEnergy < energyToSpend) return;
 
             if (Input.GetMouseButtonDown(0))
             {
+                if (EnergyManager.HeightEnergy < energyToSpend)
+                {
+                    CameraManager.CameraShake(0.1f, 0.1f);
+                    return;
+                }
+
                 EnergyManager.HeightEnergy -= energyToSpend;
                 _submitCoroutine = StartCoroutine(Submit());
             }
@@ -160,7 +177,7 @@ namespace Code.Managers
                 _submitTimeGlobal -= Time.deltaTime;
                 if (_submitTimeGlobal < 0)
                 {
-                    BlocksManager.RemoveBlock(block);
+                    block.Hit(99999);
                     break;
                 }
                 yield return null;

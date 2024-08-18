@@ -65,7 +65,7 @@ namespace Code.Managers
             for (int i = 0; i < ShatterPartsPoolSize; i++)
             {
                 var toSpawn = _shatterPrefabs[i % _shatterPrefabs.Count];
-                var instance = Instantiate(toSpawn, Vector3.zero, Quaternion.identity);
+                var instance = Instantiate(toSpawn, Vector3.zero, Quaternion.identity, transform);
                 instance.SetActive(false);
                 instance.GetComponent<MeshCollider>();
                 var shatterPart = new ShatterPart

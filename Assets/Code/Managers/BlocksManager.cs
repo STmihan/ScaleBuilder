@@ -14,10 +14,12 @@ namespace Code.Managers
         
         private readonly List<Block> _blocks = new List<Block>();
 
+        private WeightedRandomSelector<BlockType> _blockRandomSelector = new WeightedRandomSelector<BlockType>();
+        
         public void GenerateNextBlockType()
         {
             CurrentBlockType = NextBlockType;
-            NextBlockType = (BlockType) UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockType)).Length);
+            NextBlockType = _blockRandomSelector.GetRandom();
             OnBlockTypeChanged?.Invoke(CurrentBlockType);
         }
         
@@ -63,7 +65,6 @@ namespace Code.Managers
             {
                 if (block.Velocity.magnitude > 0.1f)
                 {
-                    Debug.Log("Block is moving with velocity " + block.Velocity.magnitude);
                     return true;
                 }
             }

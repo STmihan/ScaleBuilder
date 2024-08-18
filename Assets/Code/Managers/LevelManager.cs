@@ -7,8 +7,8 @@ namespace Code.Managers
     public class LevelManager : Singleton<LevelManager>, IRestart
     {
         private BlocksManager BlocksManager => BlocksManager.Instance;
-        
-        public bool IsGameOver { get; private set; }
+
+        public bool IsGameOver { get; private set; } = true;
         public event Action OnGameOver;
         public int Score => Mathf.RoundToInt(BlocksManager.GetBlocksHeight());
 
