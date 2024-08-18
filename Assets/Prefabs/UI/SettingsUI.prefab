@@ -1566,6 +1566,8 @@ MonoBehaviour:
   _background: {fileID: 3508985703314889251}
   _panel: {fileID: 6955853695412856101}
   _backButton: {fileID: 8033461094018082204}
+  _musicSlider: {fileID: 195574754368007832}
+  _soundSlider: {fileID: 1510224225010821791}
 --- !u!1 &8876929355523673705
 GameObject:
   m_ObjectHideFlags: 0
