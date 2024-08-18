@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Code.Configs;
+using Code.Gameplay;
 using Code.Managers;
 using Code.Utils;
 using DG.Tweening;
@@ -10,22 +11,31 @@ namespace Code.UI
     public class InGameUI : Singleton<InGameUI>, IRestart
     {
         private EnergyManager EnergyManager => EnergyManager.Instance;
+        private BlocksManager BlocksManager => BlocksManager.Instance;
+        private GameConfig GameConfig => GameConfig.Instance;
         
         [SerializeField] private Image _foundationEnergyBar;
         [SerializeField] private Image _foundationEnergyBarToSpend;
         [SerializeField] private Image _heightEnergyBar;
         [SerializeField] private Image _heightEnergyBarToSpend;
+        [Space]
+        [SerializeField] private Image _currentBlockImage;
+        [SerializeField] private Image _nextBlockImage;
 
         private void Start()
         {
             EnergyManager.OnFoundationEnergyChanged += OnFoundationEnergyChanged;
             EnergyManager.OnHeightEnergyChanged += OnHeightEnergyChanged;
+            BlocksManager.OnBlockTypeChanged += OnBlockTypeChanged;
             _foundationEnergyBar.fillAmount = 1;
             _heightEnergyBar.fillAmount = 1;
             _foundationEnergyBarToSpend.fillAmount = 0;
             _heightEnergyBarToSpend.fillAmount = 0;
+            
+            _currentBlockImage.color = GameConfig.BlockStats[BlocksManager.CurrentBlockType].Material.color;
+            _nextBlockImage.color = GameConfig.BlockStats[BlocksManager.NextBlockType].Material.color;
         }
-
+        
         private void OnHeightEnergyChanged(int energy)
         {
             float fillAmount = (float) energy / EnergyManager.GameConfig.MaxHeightEnergy;
@@ -60,6 +70,26 @@ namespace Code.UI
             _heightEnergyBar.fillAmount = 1;
             _foundationEnergyBarToSpend.fillAmount = 0;
             _heightEnergyBarToSpend.fillAmount = 0;
+        }
+        
+        private void OnBlockTypeChanged(BlockType obj)
+        {
+            DOTween.Sequence()
+                .Append(_currentBlockImage.rectTransform.DOAnchorPosY(100, 0.2f))
+                .Join(_currentBlockImage.DOFade(0, 0.2f))
+                .Join(_nextBlockImage.rectTransform.DOAnchorPosY(100, 0.2f))
+                .Join(_nextBlockImage.DOFade(0, 0.2f))
+                .AppendCallback(() =>
+                {
+                    _currentBlockImage.color = GameConfig.BlockStats[obj].Material.color;
+                    _nextBlockImage.color = GameConfig.BlockStats[BlocksManager.NextBlockType].Material.color;
+                })
+                .Append(_currentBlockImage.rectTransform.DOAnchorPosY(-100, 0))
+                .Join(_nextBlockImage.rectTransform.DOAnchorPosY(-100, 0))
+                .Append(_currentBlockImage.rectTransform.DOAnchorPosY(0, 0.2f))
+                .Join(_currentBlockImage.DOFade(1, 0.2f))
+                .Join(_nextBlockImage.rectTransform.DOAnchorPosY(0, 0.2f))
+                .Join(_nextBlockImage.DOFade(1, 0.2f));
         }
     }
 }
