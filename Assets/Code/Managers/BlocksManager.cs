@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using Code.Gameplay;
 using Code.Utils;
 using UnityEngine;
@@ -8,8 +8,19 @@ namespace Code.Managers
 {
     public class BlocksManager : Singleton<BlocksManager>, IRestart
     {
+        public event Action<BlockType> OnBlockTypeChanged; 
+        public BlockType CurrentBlockType { get; private set; }
+        public BlockType NextBlockType { get; private set; }
+        
         private readonly List<Block> _blocks = new List<Block>();
 
+        public void GenerateNextBlockType()
+        {
+            CurrentBlockType = NextBlockType;
+            NextBlockType = (BlockType) UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockType)).Length);
+            OnBlockTypeChanged?.Invoke(CurrentBlockType);
+        }
+        
         public void AddBlock(Block block)
         {
             _blocks.Add(block);

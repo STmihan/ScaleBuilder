@@ -7,7 +7,6 @@ namespace Code.Managers
     public class LevelManager : Singleton<LevelManager>, IRestart
     {
         private BlocksManager BlocksManager => BlocksManager.Instance;
-        private MeshManager MeshManager => MeshManager.Instance;
         
         public bool IsGameOver { get; private set; }
         public event Action OnGameOver;
