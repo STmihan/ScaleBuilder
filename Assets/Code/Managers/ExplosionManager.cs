@@ -26,7 +26,7 @@ namespace Code.Managers
     public class ExplosionManager : Singleton<ExplosionManager>
     {
         private GameConfig GameConfig => GameConfig.Instance;
-        private const int ShatterPartsPoolSize = 200;
+        private const int ShatterPartsPoolSize = 690;
 
         [SerializeField] private List<GameObject> _shatterPrefabs;
         [SerializeField] private int _shatterCountPerUnit = 5;
