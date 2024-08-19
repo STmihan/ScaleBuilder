@@ -97,6 +97,7 @@ namespace Code.Managers
             {
                 _foundation = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 _meshRenderer = _foundation.GetComponent<MeshRenderer>();
+                _foundation.GetComponent<BoxCollider>().enabled = false;
                 _meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 _meshRenderer.material = _foundationMaterial;
                 _foundation.transform.position = _startPoint;

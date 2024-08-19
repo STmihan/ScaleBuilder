@@ -306,6 +306,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musicSource: {fileID: 8494466538169730368}
   _soundSource: {fileID: 5010887778484672333}
-  _soundClips: []
+  _soundClips:
+  - <SoundType>k__BackingField: 0
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: 08f08820826ca3f42900b76dd4255d6c,
+      type: 3}
+  - <SoundType>k__BackingField: 1
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: e86fef44686a168449640a5ff5208244,
+      type: 3}
+  - <SoundType>k__BackingField: 2
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: e86fef44686a168449640a5ff5208244,
+      type: 3}
+  - <SoundType>k__BackingField: 3
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: d2d16475e98b3d9478ab7ef7eaa2e3fa,
+      type: 3}
+  - <SoundType>k__BackingField: 4
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: 367f8178df9992a42a9483f293d2942f,
+      type: 3}
+  - <SoundType>k__BackingField: 5
+    <AudioClip>k__BackingField: {fileID: 8300000, guid: 67072e3ae4edd3b4da265125f2e0d293,
+      type: 3}
   _musicClips:
   - {fileID: 8300000, guid: 8b86b7fc8c893e24d9e2d6b82e341a21, type: 3}
