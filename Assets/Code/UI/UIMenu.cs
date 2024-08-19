@@ -1,4 +1,5 @@
-﻿using Code.Utils;
+﻿using Code.Managers;
+using Code.Utils;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,8 @@ namespace Code.UI
 {
     public abstract class UIMenu<T> : Singleton<T> where T : UIMenu<T>
     {
+        private AudioManager AudioManager => AudioManager.Instance;
+        
         [SerializeField] private Image _background;
         [SerializeField] private RectTransform _panel;
 
@@ -34,6 +37,7 @@ namespace Code.UI
             }
             else
             {
+                AudioManager.PlaySoundOneShot(SoundType.UIOut);
                 var sequence = DOTween.Sequence();
                 if (!hideBackground)
                 {
@@ -56,6 +60,8 @@ namespace Code.UI
             PreviousMenu = previousMenu;
             _background.gameObject.SetActive(true);
             _panel.gameObject.SetActive(true);
+            
+            AudioManager.PlaySoundOneShot(SoundType.UIIn);
             
             var sequence = DOTween.Sequence();
             sequence.Join(_background.DOFade(0.8f, 0.5f));
