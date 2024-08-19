@@ -35,6 +35,7 @@ namespace Code.Gameplay
             
 
             Health = CalculateHealth(blockType);
+            Debug.Log($"New block spawned. Block type {blockType}. Health: {Health}");
             _meshRenderer = GetComponent<MeshRenderer>();
             _meshRenderer.material = GameConfig.BlockStats[blockType].Material;
             _meshRenderer.shadowCastingMode = ShadowCastingMode.On;
@@ -50,6 +51,7 @@ namespace Code.Gameplay
         private void OnNewContactPointHandler(ContactPoint contactPoint)
         {
             var velocity = contactPoint.impulse.magnitude;
+            Debug.Log($"Block velocity: {velocity}");
             if (contactPoint.otherCollider.TryGetComponent(out Block block))
             {
                 OnHitBlock?.Invoke(velocity, this, block);
@@ -84,7 +86,8 @@ namespace Code.Gameplay
 
         private float CalculateHealth(BlockType type)
         {
-            return GameConfig.BlockStats[type].Health * transform.localScale.magnitude;
+            float health =Mathf.Max(GameConfig.BlockStats[type].Health * transform.localScale.magnitude, GameConfig.BlockStats[type].Health) ;
+            return health;
         }
     }
 }
