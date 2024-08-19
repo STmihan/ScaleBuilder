@@ -74,7 +74,8 @@ namespace Code.Managers
 
         private void OnHitBlock(float velocity, Block block1, Block block2)
         {
-            PlaySoundOneShot(SoundType.Hit, velocity / 10);
+            float soundVolume = Mathf.Clamp(velocity, 0.1f, 1);
+            PlaySoundOneShot(SoundType.Hit, soundVolume);
         }
 
         public void PlaySoundOneShot(SoundType soundType, float volume = 1)
@@ -84,8 +85,11 @@ namespace Code.Managers
                 Debug.LogError($"Sound type {soundType} not found");
                 return;
             }
+            
             _soundSource.volume *= volume;
+            _soundSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
             _soundSource.PlayOneShot(clip);
+            _soundSource.pitch = 1;
             _soundSource.volume /= volume;
         }
 

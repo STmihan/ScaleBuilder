@@ -4,6 +4,7 @@ using Code.Gameplay;
 using Code.Managers;
 using Code.Utils;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ namespace Code.UI
         [Space]
         [SerializeField] private Image _currentBlockImage;
         [SerializeField] private Image _nextBlockImage;
+        [Space]
+        [SerializeField] private TMP_Text _scoreText;
 
         private CanvasGroup _canvasGroup;
         
@@ -43,6 +46,7 @@ namespace Code.UI
 
         private void Update()
         {
+            _scoreText.text = LevelManager.Score.ToString();
             _canvasGroup.alpha = LevelManager.IsGameOver ? 0 : 1;
         }
 

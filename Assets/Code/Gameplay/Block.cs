@@ -4,7 +4,6 @@ using Code.Gameplay.Explosions;
 using Code.Managers;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 namespace Code.Gameplay
 {
@@ -24,6 +23,9 @@ namespace Code.Gameplay
         public Vector3 Velocity => _rigidbody.velocity;
         
         private Rigidbody _rigidbody;
+        
+        private BoxCollider _collider;
+        public BoxCollider Collider => _collider;
 
         
         public void Setup(BlockType blockType, float height)
@@ -38,8 +40,26 @@ namespace Code.Gameplay
             _meshRenderer.shadowCastingMode = ShadowCastingMode.On;
 
             _rigidbody = gameObject.AddComponent<Rigidbody>();
+            _rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             _rigidbody.mass = GameConfig.BlockStats[blockType].MassPerUnit * _rigidbody.transform.localScale.magnitude;
             MeshExploder = gameObject.AddComponent<MeshExploder>();
+            _collider = gameObject.GetComponent<BoxCollider>();
+            _collider.enabled = true;
+        }
+
+        private void OnNewContactPointHandler(ContactPoint contactPoint)
+        {
+            var velocity = contactPoint.impulse.magnitude;
+            if (contactPoint.otherCollider.TryGetComponent(out Block block))
+            {
+                OnHitBlock?.Invoke(velocity, this, block);
+                return;
+            }
+
+            if (contactPoint.otherCollider.gameObject.layer == LayerMask.NameToLayer("Terrain"))
+            {
+                OnHitBlock?.Invoke(velocity, this, null);
+            }
         }
 
         public void Hit(float damage)
@@ -53,15 +73,8 @@ namespace Code.Gameplay
         }
         
         private void OnCollisionEnter(Collision other)
-        { 
-            if (other.gameObject.layer == LayerMask.NameToLayer("Terrain")) 
-            {
-                OnHitBlock?.Invoke(Height, this, null);
-            }
-            if (other.gameObject.TryGetComponent<Block>(out var block))
-            {
-                OnHitBlock?.Invoke(Height, this, block);
-            }
+        {
+            OnNewContactPointHandler(other.GetContact(0));
         }
         
         public float GetMass()
