@@ -16,22 +16,22 @@ MonoBehaviour:
   - <BlockType>k__BackingField: 0
     <Material>k__BackingField: {fileID: 2100000, guid: 22abf99d8a16b7341a5522cebc0f2666,
       type: 2}
-    <Health>k__BackingField: 3000
-    <DamageMultiplier>k__BackingField: 2
+    <Health>k__BackingField: 350
+    <DamageMultiplier>k__BackingField: 1.6
     <MassPerUnit>k__BackingField: 2
   - <BlockType>k__BackingField: 1
     <Material>k__BackingField: {fileID: 2100000, guid: c5bba3510781868429673fc6baedcb0b,
       type: 2}
-    <Health>k__BackingField: 2600
-    <DamageMultiplier>k__BackingField: 3.5
+    <Health>k__BackingField: 490
+    <DamageMultiplier>k__BackingField: 2.3
     <MassPerUnit>k__BackingField: 6
   - <BlockType>k__BackingField: 2
     <Material>k__BackingField: {fileID: 2100000, guid: a57c5b373ef879847b8f73f8a92cd7c7,
       type: 2}
-    <Health>k__BackingField: 3000
-    <DamageMultiplier>k__BackingField: 6.5
+    <Health>k__BackingField: 630
+    <DamageMultiplier>k__BackingField: 4
     <MassPerUnit>k__BackingField: 10
-  <TerrainDamageMultiplier>k__BackingField: 4
+  <TerrainDamageMultiplier>k__BackingField: 0.7
   <MaxFoundationEnergy>k__BackingField: 100
   <FoundationEnergyLossPerUnit>k__BackingField: 7
   <FoundationEnergyGainPerRound>k__BackingField: 8
@@ -42,3 +42,5 @@ MonoBehaviour:
   <HeightEnergyGainPerRound>k__BackingField: 6
   <HeightEnergyGainPerHit>k__BackingField: 4
   <HeightEnergyGainVelocityMultiplier>k__BackingField: 2
+  <TrashHold>k__BackingField: 0.01
+  <HealthTrashHold>k__BackingField: 0.01
