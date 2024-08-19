@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Gameplay;
 using Code.Utils;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace Code.Managers
 
     public class AudioManager : Singleton<AudioManager>
     {
+        private LevelManager LevelManager => LevelManager.Instance;
+        
         [SerializeField] private AudioSource _musicSource;
         [SerializeField] private AudioSource _soundSource;
         
@@ -60,11 +63,30 @@ namespace Code.Managers
             MusicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.3f);
             SoundVolume = PlayerPrefs.GetFloat("SoundVolume", 0.3f);
             StartMusic();
+            Block.OnHitBlock += OnHitBlock;
+            LevelManager.OnGameOver += OnGameOver;
         }
-        
-        public void PlaySoundOneShot(SoundType soundType)
+
+        private void OnGameOver()
         {
-            _soundSource.PlayOneShot(SoundClips[soundType]);
+            PlaySoundOneShot(SoundType.GameOver);
+        }
+
+        private void OnHitBlock(float velocity, Block block1, Block block2)
+        {
+            PlaySoundOneShot(SoundType.Hit, velocity / 10);
+        }
+
+        public void PlaySoundOneShot(SoundType soundType, float volume = 1)
+        {
+            if (!SoundClips.TryGetValue(soundType, out var clip))
+            {
+                Debug.LogError($"Sound type {soundType} not found");
+                return;
+            }
+            _soundSource.volume *= volume;
+            _soundSource.PlayOneShot(clip);
+            _soundSource.volume /= volume;
         }
 
         private void StartMusic()
