@@ -12,10 +12,13 @@ namespace Code.Managers
         private float _targetHeight;
 
         private Camera _camera;
+        
+        private Quaternion _targetRotation;
 
         private void Start()
         {
             _camera = Camera.main;
+            _targetRotation = transform.rotation;
         }
 
         private void Update()
@@ -31,14 +34,16 @@ namespace Code.Managers
             {
                 float dx = Input.mousePositionDelta.x;
                 transform.Rotate(Vector3.up, dx * Time.deltaTime * _rotateSense);
+                _targetRotation = transform.rotation;
             }
             //Vector3 currentRotation = transform.rotation.eulerAngles;
             //Debug.Log("Текущий угол поворота камеры: " + currentRotation);           
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                transform.rotation = Quaternion.Euler(0, 90, 0);
+                _targetRotation = Quaternion.Euler(0, 90, 0);
             }
             
+            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * 5);
         }
 
         public void SetTargetHeight(float height)
