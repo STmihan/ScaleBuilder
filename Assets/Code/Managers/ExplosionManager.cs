@@ -67,6 +67,7 @@ namespace Code.Managers
 
         private void Start()
         {
+            DOTween.SetTweensCapacity(ShatterPartsPoolSize * 2, ShatterPartsPoolSize * 2);
             for (int i = 0; i < ShatterPartsPoolSize; i++)
             {
                 var toSpawn = _shatterPrefabs[i % _shatterPrefabs.Count];

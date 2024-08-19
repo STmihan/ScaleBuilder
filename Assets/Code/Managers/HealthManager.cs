@@ -1,5 +1,4 @@
-﻿using System;
-using Code.Configs;
+﻿using Code.Configs;
 using Code.Gameplay;
 using Code.Utils;
 using UnityEngine;
@@ -21,16 +20,28 @@ namespace Code.Managers
             if (!block2)
             {
                 damage = velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass();
-                block1.Hit(velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass());
-                Debug.Log("Terrain hit. Damage: "+ damage);
+                Debug.Log($"Terrain hit. Damage: {damage} ({GameConfig.HealthTrashHold})");
+                if (damage > GameConfig.HealthTrashHold)
+                {
+                    block1.Hit(velocity * GameConfig.TerrainDamageMultiplier * block1.GetMass());
+                }
+
                 return;
             }
+
             damage = velocity * GameConfig.BlockStats[block2.BlockType].DamageMultiplier * block2.GetMass();
-            block1.Hit(damage);
-            Debug.Log("Block 1 hit. Damage: " + damage);
+            Debug.Log($"Block 1 hit. Damage: {damage} ({GameConfig.HealthTrashHold})");
+            if (damage > GameConfig.HealthTrashHold)
+            {
+                block1.Hit(damage);
+            }
+
             damage = velocity * GameConfig.BlockStats[block1.BlockType].DamageMultiplier * block1.GetMass();
-            Debug.Log("Block 2 hit. Damage: " + damage);
-            block2.Hit(damage);
+            Debug.Log($"Block 2 hit. Damage: {damage} ({GameConfig.HealthTrashHold})");
+            if (damage > GameConfig.HealthTrashHold)
+            {
+                block2.Hit(damage);
+            }
         }
     }
 }

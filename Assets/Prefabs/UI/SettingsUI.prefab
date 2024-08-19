@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 140, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1719811971166851252
 CanvasRenderer:
@@ -467,7 +467,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 140, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4200112264853130747
 CanvasRenderer:
@@ -632,8 +632,8 @@ RectTransform:
   m_GameObject: {fileID: 3479069567007311465}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6955853695412856101}
   m_Father: {fileID: 4924677200638851266}
@@ -641,7 +641,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 960, y: 600}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8086774583370783299
 CanvasRenderer:
@@ -1018,6 +1018,7 @@ GameObject:
   - component: {fileID: 665427982966741572}
   - component: {fileID: 4036753192261838969}
   - component: {fileID: 8033461094018082204}
+  - component: {fileID: 2487238433889945299}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -1127,6 +1128,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2487238433889945299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6817477311249287029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c87c8ff33343b89a35aa0527139545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6877326925845925577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,12 +1536,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1566,6 +1579,8 @@ MonoBehaviour:
   _background: {fileID: 3508985703314889251}
   _panel: {fileID: 6955853695412856101}
   _backButton: {fileID: 8033461094018082204}
+  _musicSlider: {fileID: 195574754368007832}
+  _soundSlider: {fileID: 1510224225010821791}
 --- !u!1 &8876929355523673705
 GameObject:
   m_ObjectHideFlags: 0
