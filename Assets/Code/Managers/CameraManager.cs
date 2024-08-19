@@ -36,8 +36,7 @@ namespace Code.Managers
                 transform.Rotate(Vector3.up, dx * Time.deltaTime * _rotateSense);
                 _targetRotation = transform.rotation;
             }
-            //Vector3 currentRotation = transform.rotation.eulerAngles;
-            //Debug.Log("Текущий угол поворота камеры: " + currentRotation);           
+      
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 _targetRotation = Quaternion.Euler(0, 90, 0);
