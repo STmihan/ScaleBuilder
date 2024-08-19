@@ -10,7 +10,7 @@ namespace Code.Managers
 
         public bool IsGameOver { get; private set; } = true;
         public event Action OnGameOver;
-        public int Score => Mathf.Max(Mathf.RoundToInt(BlocksManager.GetBlocksHeight() * 100), 0);
+        public int Score => GetScore();
         public int HighScore { get; private set; }
 
         private void Awake()
@@ -38,6 +38,13 @@ namespace Code.Managers
         public void Restart()
         {
             IsGameOver = false;
+        }
+
+        public int GetScore()
+        {
+            var blocksHeight = BlocksManager.GetBlocksHeight() * 100;
+            var roundToInt = Mathf.RoundToInt(blocksHeight);
+            return roundToInt;
         }
     }
 }

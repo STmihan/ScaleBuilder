@@ -36,7 +36,7 @@ namespace Code.Managers
 
         public float GetBlocksHeight()
         {
-            float maxHeight = float.MinValue;
+            float maxHeight = 0;
 
             foreach (var block in _blocks)
             {
