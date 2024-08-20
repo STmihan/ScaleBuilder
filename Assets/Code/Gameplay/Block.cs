@@ -69,7 +69,10 @@ namespace Code.Gameplay
             Health -= damage;
             if (Health <= 0)
             {
-                MeshExploder.Explode(BlockType);
+                if (MeshExploder)
+                {
+                    MeshExploder.Explode(BlockType);
+                }
                 BlocksManager.RemoveBlock(this);
             }
         }
