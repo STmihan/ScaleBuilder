@@ -31,7 +31,7 @@ MonoBehaviour:
     <Health>k__BackingField: 700
     <DamageMultiplier>k__BackingField: 4
     <MassPerUnit>k__BackingField: 10
-  <TerrainDamageMultiplier>k__BackingField: 0.7
+  <TerrainDamageMultiplier>k__BackingField: 0.15
   <MaxFoundationEnergy>k__BackingField: 100
   <FoundationEnergyLossPerUnit>k__BackingField: 7
   <FoundationEnergyGainPerRound>k__BackingField: 8
@@ -43,4 +43,4 @@ MonoBehaviour:
   <HeightEnergyGainPerHit>k__BackingField: 4
   <HeightEnergyGainVelocityMultiplier>k__BackingField: 2
   <TrashHold>k__BackingField: 0.01
-  <HealthTrashHold>k__BackingField: 0.01
+  <HealthTrashHold>k__BackingField: 15
