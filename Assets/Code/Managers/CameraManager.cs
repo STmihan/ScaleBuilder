@@ -2,6 +2,7 @@
 using System.Collections;
 using Code.Utils;
 using DG.Tweening;
+using Plugins.webgl;
 using UnityEngine;
 
 namespace Code.Managers
@@ -30,7 +31,7 @@ namespace Code.Managers
             );
             
             transform.position = pos;
-            if (Input.GetMouseButton(2))
+            if (Input.GetMouseButton(Platform.IsMobile() ? 1 : 2))
             {
                 float dx = Input.mousePositionDelta.x;
                 transform.Rotate(Vector3.up, dx * Time.deltaTime * _rotateSense);

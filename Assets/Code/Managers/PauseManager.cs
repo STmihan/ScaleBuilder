@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Code.UI;
+using UnityEngine;
 
 namespace Code.Managers
 {
@@ -10,12 +11,14 @@ namespace Code.Managers
         {
             IsPaused = true;
             Time.timeScale = 0;
+            PauseUI.Instance.Show<PauseUI>(null);
         }
         
         public static void Resume()
         {
             IsPaused = false;
             Time.timeScale = 1;
+            PauseUI.Instance.Hide();
         }
     }
 }

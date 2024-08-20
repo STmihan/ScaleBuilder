@@ -4,7 +4,9 @@ using Code.Configs;
 using Code.Gameplay;
 using Code.UI;
 using Code.Utils;
+using Plugins.webgl;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Code.Managers
 {
@@ -15,7 +17,7 @@ namespace Code.Managers
         private LevelManager LevelManager => LevelManager.Instance;
         private EnergyManager EnergyManager => EnergyManager.Instance;
         private InGameUI InGameUI => InGameUI.Instance;
-        
+
         [SerializeField] private float _startHeight = 0.1f;
         [SerializeField] private float _maxHeightPerBlock = 4f;
         [SerializeField] private float _startSubmitTime = 1f;
@@ -23,7 +25,7 @@ namespace Code.Managers
         [SerializeField] private HeightPlane _heightPlane;
         [SerializeField] private Material _foundationMaterial;
         [SerializeField] private Material _heightMaterial;
-        
+
         private Vector3 _startPoint;
         private Vector3 _endPoint;
         private GenerationStep _currentStep = GenerationStep.FirstPoint;
@@ -36,9 +38,12 @@ namespace Code.Managers
 
         private Coroutine _submitCoroutine;
         private float _submitTime;
-        
+
         private GameObject _foundation;
         private MeshRenderer _meshRenderer;
+
+        public GenerationStep CurrentStep => _currentStep;
+        public bool Processing { get; private set; }
 
         private void Start()
         {
@@ -59,6 +64,7 @@ namespace Code.Managers
         {
             if (_isPlacingBlock) return;
             if (LevelManager.IsGameOver) return;
+            if (EventSystem.current.IsPointerOverGameObject()) return;
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             Plane plane = new Plane(Vector3.up, new Vector3(0, _planeHeight, 0));
 
@@ -83,11 +89,18 @@ namespace Code.Managers
 
             if (Input.GetMouseButtonDown(1))
             {
-                _currentStep = GenerationStep.FirstPoint;
-                if (_foundation) Destroy(_foundation);
-                InGameUI.SetFoundationEnergyToSpend(0);
-                InGameUI.SetHeightEnergyToSpend(0);
+                Cancel();
             }
+        }
+
+        public void Cancel()
+        {
+            _currentStep = GenerationStep.FirstPoint;
+            if (_foundation) Destroy(_foundation);
+            InGameUI.SetFoundationEnergyToSpend(0);
+            InGameUI.SetHeightEnergyToSpend(0);
+            Processing = false;
+            _mobileLastEnergyToSpend = 0;
         }
 
         private void ProcessFirstPoint(Vector3 hitPoint)
@@ -110,21 +123,26 @@ namespace Code.Managers
 
         private void ProcessFoundation(Vector3 hitPoint)
         {
-            _endPoint = hitPoint;
+            int energyToSpend = 0;
 
-            Vector3 baseSize = new Vector3(Mathf.Abs(_endPoint.x - _startPoint.x), _startHeight,
-                Mathf.Abs(_endPoint.z - _startPoint.z));
-            baseSize.x = Mathf.Max(baseSize.x, _startHeight);
-            baseSize.z = Mathf.Max(baseSize.z, _startHeight);
-            _foundation.transform.localScale = baseSize;
+            void Process()
+            {
+                _endPoint = hitPoint;
 
-            _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
-                (_endPoint.z - _startPoint.z) / 2);
+                Vector3 baseSize = new Vector3(Mathf.Abs(_endPoint.x - _startPoint.x), _startHeight,
+                    Mathf.Abs(_endPoint.z - _startPoint.z));
+                baseSize.x = Mathf.Max(baseSize.x, _startHeight);
+                baseSize.z = Mathf.Max(baseSize.z, _startHeight);
+                _foundation.transform.localScale = baseSize;
 
-            int energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
-            InGameUI.SetFoundationEnergyToSpend(energyToSpend);
-            
-            if (Input.GetMouseButtonDown(0))
+                _foundation.transform.position = _startPoint + new Vector3((_endPoint.x - _startPoint.x) / 2, 0,
+                    (_endPoint.z - _startPoint.z) / 2);
+
+                energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
+                InGameUI.SetFoundationEnergyToSpend(energyToSpend);
+            }
+
+            void Apply()
             {
                 if (EnergyManager.FoundationEnergy < energyToSpend)
                 {
@@ -135,23 +153,50 @@ namespace Code.Managers
                 _currentStep = GenerationStep.Height;
                 _meshRenderer.material = _heightMaterial;
             }
+
+            if (Platform.IsMobile())
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    Processing = true;
+                    Process();
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Processing = false;
+                    Apply();
+                }
+            }
+            else
+            {
+                Process();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Apply();
+                }
+            }
         }
 
+        private int _mobileLastEnergyToSpend;
+        
         private void ProcessHeight()
         {
-            _height += Input.mousePositionDelta.y * 0.03f;
+            int Process()
+            {
+                _height += Input.mousePositionDelta.y * 0.03f;
 
-            _height = Mathf.Clamp(_height, _startHeight, _maxHeightPerBlock);
-            _foundation.transform.localScale = new Vector3(_foundation.transform.localScale.x, _height,
-                _foundation.transform.localScale.z);
-            _foundation.transform.position = new Vector3(_foundation.transform.position.x,
-                _planeHeight + _height / 2, _foundation.transform.position.z);
-            
-            int energyToSpend = EnergyManager.CalculateHeightEnergyLoss(_height);
-            InGameUI.SetHeightEnergyToSpend(energyToSpend);
-            
+                _height = Mathf.Clamp(_height, _startHeight, _maxHeightPerBlock);
+                _foundation.transform.localScale = new Vector3(_foundation.transform.localScale.x, _height,
+                    _foundation.transform.localScale.z);
+                _foundation.transform.position = new Vector3(_foundation.transform.position.x,
+                    _planeHeight + _height / 2, _foundation.transform.position.z);
 
-            if (Input.GetMouseButtonDown(0))
+                int energyToSpend = EnergyManager.CalculateHeightEnergyLoss(_height);
+                InGameUI.SetHeightEnergyToSpend(energyToSpend);
+                return energyToSpend;
+            }
+            void Apply(int energyToSpend)
             {
                 if (EnergyManager.HeightEnergy < energyToSpend)
                 {
@@ -163,6 +208,26 @@ namespace Code.Managers
                 energyToSpend = EnergyManager.CalculateFoundationEnergyLoss(_startPoint, _endPoint);
                 EnergyManager.FoundationEnergy -= energyToSpend;
                 _submitCoroutine = StartCoroutine(Submit());
+            }
+
+            if (Platform.IsMobile())
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    Processing = true;
+                    _mobileLastEnergyToSpend = Process();
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Processing = false;
+                    Apply(_mobileLastEnergyToSpend);
+                }
+            }
+            else
+            {
+                int energyToSpend = Process();
+                if (Input.GetMouseButtonDown(0)) Apply(energyToSpend);
             }
         }
 
@@ -184,6 +249,7 @@ namespace Code.Managers
                     block.Hit(99999);
                     break;
                 }
+
                 yield return null;
             }
 

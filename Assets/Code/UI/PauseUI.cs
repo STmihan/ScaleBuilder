@@ -34,7 +34,6 @@ namespace Code.UI
                 else if (!PauseManager.IsPaused && !IsVisible && !LevelManager.IsGameOver)
                 {
                     PauseManager.Pause();
-                    Show(this);
                 }
             }
         }
@@ -53,7 +52,6 @@ namespace Code.UI
 
         private void OnStartButtonClicked()
         {
-            Hide();
             PauseManager.Resume();
         }
     }
